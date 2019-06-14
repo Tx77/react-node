@@ -1,0 +1,33 @@
+#app[data-v-e5a52d7a] {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+}
+#app .app-image[data-v-e5a52d7a] {
+  width: 300px;
+  height: 300px;
+  margin: 0 auto;
+}
+
+.hello-world[data-v-33bf2ce0] {
+  text-align: center;
+  color: red;
+}
+
+h2[data-v-96c17494] {
+  font-weight: normal;
+}
+.wrapper .author[data-v-96c17494] {
+  text-align: center;
+}
+
+h2[data-v-7ff24304] {
+  font-weight: normal;
+}
+.detail .link[data-v-7ff24304] {
+  margin: 0 auto;
+}
+

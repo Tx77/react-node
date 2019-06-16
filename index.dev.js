@@ -8,7 +8,8 @@ const bodyParser = require("koa-bodyparser");
 
 const { PORT } = require("./config/server");
 const { getRouterPath, log } = require("./utils/framework");
-const webpackConfig = require("./vue/webpack.config.js");
+// const webpackConfig = require("./vue/webpack.config.js");
+const webpackConfig = require("./react/webpack.config.js");
 
 const app = new Koa();
 const router = new Router();

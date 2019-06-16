@@ -6,14 +6,14 @@ import {
   Switch
 } from "react-router-dom";
 import axios from "axios";
-import { Layout } from "antd";
+import { Layout, Menu, Breadcrumb } from "antd";
 const { Header, Sider, Content, Footer } = Layout;
 
 import HeadBar from "layout/header/index.jsx";
 import SideBar from "layout/sideBar/index.jsx";
 import ContentRoute from "router/contentRoute.jsx";
 
-import routerList from '../routerList.js';
+import routerList from "../routerList.js";
 
 import "style/app.less";
 

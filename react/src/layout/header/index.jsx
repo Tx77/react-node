@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import { Link, withRouter } from "react-router-dom";
+import { Link, withRouter, Switch, Redirect } from "react-router-dom";
 import PureRenderMixin from "react-addons-pure-render-mixin";
 import { Menu, Icon, Button } from "antd";
 import PropTypes from "prop-types";
 import "./index.less";
 import "style/common.less";
+import homeIcon from "style/images/react-icon.png";
 
 class Header extends Component {
   constructor(props) {
@@ -12,38 +13,95 @@ class Header extends Component {
     this.state = {
       menu: props.menu,
       selectedKeys: [props.history.location.pathname],
-      block: props.block
+      block: props.block,
+      redirect: false,
+      currentLocation: ""
     };
   }
 
-  componentWillReceiveProps = nextProps => {
-    let sideBar = [];
+  componentWillMount() {
+    let currentLocation = this.props.history.location.pathname;
     this.setState(
       {
-        menu: nextProps.menu,
-        block: nextProps.block
+        currentLocation: currentLocation
       },
       () => {
-        this.props.menu.map(item => {
-          if (
-            this.props.history.location.pathname.indexOf(item.resourcesUrl) > -1
-          ) {
-            sideBar = item.childResourcesEntityList;
-            this.setState({
-              selectedKeys: [item.resourcesUrl],
-              block: false
-            });
-          }
-        });
-        if (
-          this.props.history.location.pathname !== "/" &&
-          sideBar.length > 0 &&
-          !this.state.block
-        ) {
-          this.props.getSideBar(sideBar);
+        if (this.state.currentLocation !== "") {
+          this.state.menu.map(item => {
+            if (this.state.currentLocation.indexOf(item.resourcesUrl) > -1) {
+              this.setState({
+                selectedKeys: [item.resourcesUrl]
+              });
+              this.props.getSideBar(item.childResourcesEntityList);
+            }
+          });
         }
       }
     );
+  }
+
+  componentDidMount() {
+    // 监听路由变化
+    this.props.history.listen(route => {
+      let currentLocation = route.pathname;
+      // console.log(currentLocation);
+      let sideBar = [];
+      this.props.menu.map(item => {
+        if (currentLocation.indexOf(item.resourcesUrl) > -1) {
+          sideBar = item.childResourcesEntityList;
+          this.setState({
+            selectedKeys: [item.resourcesUrl],
+            block: false
+          });
+        }
+        // 路由切换为根目录
+        if (currentLocation === "/home") {
+          sideBar = [];
+          this.setState({
+            selectedKeys: [""],
+            block: false
+          });
+        }
+      });
+      if (!this.state.block) {
+        this.props.getSideBar(sideBar);
+      }
+      // if (currentLocation !== "/" && sideBar.length > 0 && !this.state.block) {
+      //   this.props.getSideBar(sideBar);
+      // }
+    });
+  }
+
+  componentWillUpdate() {}
+
+  componentWillReceiveProps = nextProps => {
+    // let sideBar = [];
+    // this.setState(
+    //   {
+    //     menu: nextProps.menu,
+    //     block: nextProps.block
+    //   },
+    //   () => {
+    //     this.props.menu.map(item => {
+    //       if (
+    //         this.props.history.location.pathname.indexOf(item.resourcesUrl) > -1
+    //       ) {
+    //         sideBar = item.childResourcesEntityList;
+    //         this.setState({
+    //           selectedKeys: [item.resourcesUrl],
+    //           block: false
+    //         });
+    //       }
+    //     });
+    //     if (
+    //       this.props.history.location.pathname !== "/" &&
+    //       sideBar.length > 0 &&
+    //       !this.state.block
+    //     ) {
+    //       this.props.getSideBar(sideBar);
+    //     }
+    //   }
+    // );
   };
 
   menuItemSelected({ item, key, selectedKeys }) {
@@ -66,10 +124,20 @@ class Header extends Component {
     return headerMenu;
   }
 
+  linkToHomePage() {
+    this.props.history.push("/home");
+  }
+
   render() {
     return (
       <div className="header-container">
-        <div className="app-logo" />
+        <div className="app-logo">
+          <img
+            src={homeIcon}
+            alt="home-icon"
+            onClick={this.linkToHomePage.bind(this)}
+          />
+        </div>
         <Menu
           onSelect={this.menuItemSelected.bind(this)}
           theme="dark"

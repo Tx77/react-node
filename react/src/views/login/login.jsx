@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
 import { Form, Input, Button, Checkbox, Icon } from "antd";
 import "./login.less";
 import { formatRoute } from "react-router-named-routes";
@@ -34,7 +35,7 @@ class LoginForm extends Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        this.props.history.push("/supplySystem");
+        this.props.history.push("/home/supplySystem");
       } else {
         console.log(err);
       }

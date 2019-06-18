@@ -2,7 +2,7 @@ export default [
   {
     name: 'supplySystem',
     title: '供应系统',
-    path: '/supplySystem/:supplyId',
+    path: '/home/supplySystem/:supplyId',
     component: 'components/blank.jsx',
     routes: [
       {
@@ -12,13 +12,13 @@ export default [
           {
             name: 'classifyManagement',
             title: '分类管理',
-            path: '/supplySystem/:supplyId/commodityManagement/classifyManagement',
+            path: '/home/supplySystem/:supplyId/commodityManagement/classifyManagement',
             component: 'views/list.jsx'
           },
           {
             name: 'specManagement',
             title: '规格管理',
-            path: '/supplySystem/:supplyId/commodityManagement/specManagement',
+            path: '/home/supplySystem/:supplyId/commodityManagement/specManagement',
             component: 'views/spec.jsx'
           }
         ]

@@ -3,7 +3,8 @@ import {
   HashRouter as Router,
   Route,
   Redirect,
-  Switch
+  Switch,
+  withRouter
 } from "react-router-dom";
 import axios from "axios";
 import { Layout, Menu, Breadcrumb } from "antd";
@@ -28,10 +29,9 @@ class App extends Component {
   }
 
   componentWillMount() {
-    // axios.get("http://localhost:7070/src/data.json").then(res => {
-    //   this.setState({ menu: res.data });
-    // });
-    this.setState({ menu: routerList });
+    this.setState({
+      menu: routerList
+    });
   }
 
   getSideBar(sideBarList) {
@@ -71,4 +71,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withRouter(App);

@@ -1,26 +1,19 @@
 import React, { Component } from "react";
-import { Provider, connect } from "react-redux";
-import { createStore } from "redux";
-import systemReducer from "reduxFactory/reducers/setSystemConstant.js";
-import { withRouter } from "react-router-dom";
 import { Form, Input, Button, Checkbox, Icon, Message } from "antd";
-import { formatRoute } from "react-router-named-routes";
-import "./login.less";
-import Axios from "axios";
+import "./index.jsx";
 import md5 from "js-md5";
+import axios from "axios";
 
 const FormItem = Form.Item;
-import { setUserName } from "reduxFactory/actions/systemConstant.js";
-const store = createStore(systemReducer);
 
 const formItemLayout = {
   labelCol: {
-    xs: { span: 4 },
-    sm: { span: 4 }
+    xs: { span: 6 },
+    sm: { span: 6 }
   },
   wrapperCol: {
-    xs: { span: 20 },
-    sm: { span: 20 }
+    xs: { span: 18 },
+    sm: { span: 18 }
   }
 };
 
@@ -33,12 +26,9 @@ const tailFormItemLayout = {
   }
 };
 
-class LoginForm extends Component {
+class RegisterForm extends Component {
   constructor() {
     super();
-    this.state = {
-      username: ""
-    };
   }
 
   handleSubmit = e => {
@@ -47,23 +37,37 @@ class LoginForm extends Component {
       if (!err) {
         let bodyParams = Object.assign({}, values);
         bodyParams.password = md5(bodyParams.password).toUpperCase();
-        Axios({
+        delete bodyParams.confirmPassword;
+        axios({
           method: "POST",
-          url: "/api/user/login",
+          url: "/api/user/register",
           data: bodyParams
         }).then(res => {
           let resData = res.data;
           if (resData.apiStatus === 0 && resData.sysStatus === 0) {
-            store.dispatch(setUserName(bodyParams.username));
-            this.props.history.push("/home/supplySystem");
+            Message.success(resData.info);
+            this.props.history.push("/login");
           } else {
             Message.error(resData.info);
           }
         });
-      } else {
-        console.log(err);
       }
     });
+  };
+
+  /**
+   * 验证再次输入密码与密码是否匹配
+   * @param rule
+   * @param value
+   * @param callback
+   */
+  checkConfirmPassword = (rule, value, callback) => {
+    let form = this.props.form;
+    if (value && value !== form.getFieldValue("password")) {
+      callback("请与第一次的密码保持一致");
+    } else {
+      callback();
+    }
   };
 
   render() {
@@ -71,16 +75,16 @@ class LoginForm extends Component {
     return (
       <div className="wrap-login-box box-shadow">
         <Form
+          {...formItemLayout}
           onSubmit={this.handleSubmit}
           style={{
             width: "90%",
             margin: "50px auto"
           }}
         >
-          <FormItem label="用户名" {...formItemLayout}>
+          <FormItem label="用户名：" colon={false}>
             {getFieldDecorator("username", {
-              rules: [{ required: true, message: "请输入用户名" }],
-              validateTrigger: "onBlur"
+              rules: [{ required: true, message: "请输入用户名" }]
             })(
               <Input
                 size="large"
@@ -92,30 +96,46 @@ class LoginForm extends Component {
             )}
           </FormItem>
 
-          <FormItem label="密码" {...formItemLayout}>
+          <FormItem label="密码：" colon={false}>
             {getFieldDecorator("password", {
-              rules: [{ required: true, message: "请输入密码" }],
-              validateTrigger: "onBlur"
+              rules: [{ required: true, message: "请输入密码" }]
             })(
-              <Input
+              <Input.Password
                 size="large"
-                type="password"
                 prefix={
-                  <Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />
+                  <Icon type="form" style={{ color: "rgba(0,0,0,.25)" }} />
                 }
                 placeholder="请输入密码"
               />
             )}
           </FormItem>
 
-          <FormItem {...tailFormItemLayout}>
+          <FormItem label="确认密码：" colon={false}>
+            {getFieldDecorator("confirmPassword", {
+              rules: [
+                { required: true, message: "请再次输入密码" },
+                { validator: this.checkConfirmPassword }
+              ],
+              validateTrigger: "onBlur"
+            })(
+              <Input.Password
+                size="large"
+                prefix={
+                  <Icon type="copy" style={{ color: "rgba(0,0,0,.25)" }} />
+                }
+                placeholder="请输入密码"
+              />
+            )}
+          </FormItem>
+
+          <FormItem label=" " colon={false}>
             <Button
               size="large"
               type="primary"
               htmlType="submit"
               className="w100-percent"
             >
-              登 录
+              注 册
             </Button>
           </FormItem>
         </Form>
@@ -124,6 +144,6 @@ class LoginForm extends Component {
   }
 }
 
-const Login = Form.create()(LoginForm);
+const Register = Form.create()(RegisterForm);
 
-export default Login;
+export default Register;

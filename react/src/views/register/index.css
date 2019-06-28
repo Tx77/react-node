@@ -1,0 +1,7 @@
+.wrap-login-box {
+  width: 500px;
+  height: 300px;
+  border-radius: 5px;
+  margin: 300px auto;
+  overflow: hidden;
+}

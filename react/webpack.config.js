@@ -24,7 +24,8 @@ let webpackConfig = {
       components: resolvePath('src/components'),
       layout: resolvePath('src/layout'),
       style: resolvePath('src/style'),
-      router: resolvePath('src/router')
+      router: resolvePath('src/router'),
+      reduxFactory: resolvePath('src/reduxFactory')
     }
   },
   module: {
@@ -35,13 +36,17 @@ let webpackConfig = {
       },
       {
         test: /\.less$/,
-        use: [{
-          loader: 'style-loader' // creates style nodes from JS strings
-        }, {
-          loader: 'css-loader' // translates CSS into CommonJS
-        }, {
-          loader: 'less-loader' // compiles Less to CSS
-        }]
+        use: [
+          {
+            loader: 'style-loader' // creates style nodes from JS strings
+          },
+          {
+            loader: 'css-loader' // translates CSS into CommonJS
+          },
+          {
+            loader: 'less-loader' // compiles Less to CSS
+          }
+        ]
       },
       {
         test: /\.css$/,
@@ -57,15 +62,11 @@ let webpackConfig = {
       },
       {
         test: /\.(html|tpl)$/,
-        use: [
-          'html-withimg-loader'
-        ]
+        use: ['html-withimg-loader']
       },
       {
         test: /\.html$/,
-        use: [
-          'html-loader'
-        ]
+        use: ['html-loader']
       },
       {
         test: /\.(jpe?g|png|gif)$/,

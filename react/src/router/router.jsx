@@ -10,6 +10,7 @@ import {
 import App from "views/app";
 import NotFound from "components/notFound";
 import Login from "views/login/login";
+import Register from "views/register/index";
 
 class RoutesManager extends Component {
   render() {
@@ -18,6 +19,7 @@ class RoutesManager extends Component {
         <Switch>
           <Route path="/home" component={App} />
           <Route exact path="/login" component={Login} />
+          <Route exact path="/register" component={Register} />
           <Route exact path="/404" component={NotFound} />
         </Switch>
       </Router>

@@ -1,11 +1,15 @@
 import React, { Component } from "react";
 import { Link, withRouter, Switch, Redirect } from "react-router-dom";
+import { createStore } from "redux";
+import systemReducer from "reduxFactory/reducers/setSystemConstant.js";
 import PureRenderMixin from "react-addons-pure-render-mixin";
 import { Menu, Icon, Button } from "antd";
 import PropTypes from "prop-types";
 import "./index.less";
 import "style/common.less";
 import homeIcon from "style/images/react-icon.png";
+
+const store = createStore(systemReducer);
 
 class Header extends Component {
   constructor(props) {
@@ -66,43 +70,12 @@ class Header extends Component {
       if (!this.state.block) {
         this.props.getSideBar(sideBar);
       }
+      console.log(store.getState());
       // if (currentLocation !== "/" && sideBar.length > 0 && !this.state.block) {
       //   this.props.getSideBar(sideBar);
       // }
     });
   }
-
-  componentWillUpdate() {}
-
-  componentWillReceiveProps = nextProps => {
-    // let sideBar = [];
-    // this.setState(
-    //   {
-    //     menu: nextProps.menu,
-    //     block: nextProps.block
-    //   },
-    //   () => {
-    //     this.props.menu.map(item => {
-    //       if (
-    //         this.props.history.location.pathname.indexOf(item.resourcesUrl) > -1
-    //       ) {
-    //         sideBar = item.childResourcesEntityList;
-    //         this.setState({
-    //           selectedKeys: [item.resourcesUrl],
-    //           block: false
-    //         });
-    //       }
-    //     });
-    //     if (
-    //       this.props.history.location.pathname !== "/" &&
-    //       sideBar.length > 0 &&
-    //       !this.state.block
-    //     ) {
-    //       this.props.getSideBar(sideBar);
-    //     }
-    //   }
-    // );
-  };
 
   menuItemSelected({ item, key, selectedKeys }) {
     this.props.history.push(key);
@@ -146,6 +119,11 @@ class Header extends Component {
         >
           {this.renderHeaderMenuItem(this.state.menu)}
         </Menu>
+        <div className="user-config">
+          <p>
+            <Icon type="user" />
+          </p>
+        </div>
       </div>
     );
   }

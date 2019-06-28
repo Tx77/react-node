@@ -15,3 +15,7 @@
   margin: 0;
   line-height: 64px;
 }
+.header-container .user-config {
+  padding: 10px;
+  line-height: 64px;
+}

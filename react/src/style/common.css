@@ -73,6 +73,21 @@
 .mgl20 {
   margin-left: 20px;
 }
+.pd10 {
+  padding: 10px;
+}
+.pd15 {
+  padding: 15px;
+}
+.pd20 {
+  padding: 20px;
+}
+.pdv10 {
+  padding: 10px 0;
+}
+.pdh10 {
+  padding: 0 10px;
+}
 .ft14 {
   font-size: 14px;
 }
@@ -108,5 +123,13 @@
   margin-bottom: 20px;
   background-color: #ffffff;
   width: 95%;
+  margin: 10px auto;
+}
+.align-form {
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 20px;
+  background-color: #ffffff;
+  width: 50%;
   margin: 10px auto;
 }

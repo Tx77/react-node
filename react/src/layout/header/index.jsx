@@ -70,7 +70,6 @@ class Header extends Component {
       if (!this.state.block) {
         this.props.getSideBar(sideBar);
       }
-      console.log(store.getState());
       // if (currentLocation !== "/" && sideBar.length > 0 && !this.state.block) {
       //   this.props.getSideBar(sideBar);
       // }

@@ -8,7 +8,7 @@ export default class ContentRoute extends Component {
     return (
       <div>
         <GoodsManagement />
-        <Route path="/home/supplySystem/:supplyId" component={blank} />
+        {/* <Route path="/home/supplySystem/:supplyId" component={blank} /> */}
       </div>
     );
   }

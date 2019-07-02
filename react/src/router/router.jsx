@@ -21,6 +21,7 @@ class RoutesManager extends Component {
           <Route exact path="/login" component={Login} />
           <Route exact path="/register" component={Register} />
           <Route exact path="/404" component={NotFound} />
+          <Redirect to="/home" />
         </Switch>
       </Router>
     );

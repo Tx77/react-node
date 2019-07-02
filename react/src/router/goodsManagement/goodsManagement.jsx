@@ -8,10 +8,15 @@ export default class GoodsManagement extends Component {
     const renderChildRoute = [];
     goodsManagement.map(item => {
       renderChildRoute.push(
-        <Route key={item.name} path={item.path} component={item.component} />
+        <Route
+          exact
+          key={item.name}
+          path={item.path}
+          component={item.component}
+        />
       );
     });
-    renderChildRoute.unshift(<Route key="" path="" component={blank} />);
-    return <div>{renderChildRoute}</div>;
+    // renderChildRoute.unshift(<Route key="" path="" component={blank} />);
+    return renderChildRoute;
   }
 }

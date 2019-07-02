@@ -66,7 +66,7 @@ class UserController {
   }
 
   /**
-   * 用户登录
+   * 用户注册
    * @param {*} ctx
    * @param {*} next
    */

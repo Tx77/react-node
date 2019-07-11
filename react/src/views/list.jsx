@@ -80,14 +80,15 @@ class FormQuery extends Component {
         Message.warning(err);
         return;
       }
-      this.refs.tableList.fetch(values);
+      this.refs.tableList.loadTableData(values);
       // this.setState({ searchQuery: values });
     });
   };
 
   /**
-   * 初始化商品状态列表并返回子组件
-   * @param arr
+   * @description: 初始化商品状态列表并返回子组件
+   * @param {arr}
+   * @return: array
    */
   initGoodsStatusList(arr) {
     let goodsStatusList = [];
@@ -188,24 +189,30 @@ class TableList extends Component {
   }
 
   componentWillMount() {
-    this.fetch();
+    this.loadTableData();
   }
-
+  /**
+   * @description: 处理table change事件
+   * @param {pagination, filters, sorter}
+   * @return:
+   */
   handleTableChange = (pagination, filters, sorter) => {
     const pager = { ...this.state.pagination };
     pager.current = pagination.current;
-    console.log(this.state.pagination);
-    console.log(pager);
     this.setState({
       pagination: pager
     });
-    this.fetch({
+    this.loadTableData({
       pageIndex: pagination.current,
       pageSize: pagination.pageSize
     });
   };
-
-  fetch = (params = {}) => {
+  /**
+   * @description: 加载table数据
+   * @param {params}
+   * @return:
+   */
+  loadTableData = (params = {}) => {
     let bodyParams = Object.assign({}, params);
     this.setState({ loading: true });
     Axios({
@@ -229,7 +236,9 @@ class TableList extends Component {
   };
 
   /**
-   * 跳转至修改页
+   * @description: 跳转至修改页
+   * @param {type}
+   * @return:
    */
   linkToModifyPage() {
     this.props.history.push(

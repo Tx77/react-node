@@ -9,6 +9,7 @@ import { Form, Row, Col, Input, Select, Button, Table, Icon } from "antd";
 import Highlighter from "react-highlight-words";
 import Axios from "axios";
 import "style/common.less";
+import PropTypes from "prop-types";
 
 const FormItem = Form.Item;
 const formItemLayout = {
@@ -34,29 +35,30 @@ const tailFormItemLayout = {
 
 const columns = [
   {
-    title: "Name",
+    title: "商品名称",
     dataIndex: "name",
     sorter: true,
-    render: name => `${name.first} ${name.last}`,
-    width: "20%"
+    render: name => <a href="javascript:;">{name}</a>
   },
   {
-    title: "Gender",
-    dataIndex: "gender",
-    filters: [
-      { text: "Male", value: "male" },
-      { text: "Female", value: "female" }
-    ],
-    width: "20%"
+    title: "商品品牌",
+    dataIndex: "brandTitle"
   },
   {
-    title: "Email",
-    dataIndex: "email"
+    title: "市场价",
+    dataIndex: "marketPrice",
+    render: price => `￥${price}`
+  },
+  {
+    title: "折扣价",
+    dataIndex: "sellingPrice",
+    render: price => `￥${price}`
   }
 ];
 
 const store = createStore(changeColor);
-class TableList extends Component {
+
+class FormQuery extends Component {
   constructor() {
     super();
     this.state = {
@@ -67,51 +69,19 @@ class TableList extends Component {
         { id: 4, title: "已上架" },
         { id: 5, title: "已下架" }
       ],
-      data: [],
-      pagination: {},
-      loading: false
+      searchQuery: {}
     };
   }
 
-  componentWillMount() {
-    this.fetch();
-  }
-
-  handleTableChange = (pagination, filters, sorter) => {
-    const pager = { ...this.state.pagination };
-    pager.current = pagination.current;
-    this.setState({
-      pagination: pager
-    });
-    this.fetch({
-      results: pagination.pageSize,
-      page: pagination.current,
-      sortField: sorter.field,
-      sortOrder: sorter.order,
-      ...filters
-    });
-  };
-
-  fetch = (params = {}) => {
-    this.setState({ loading: true });
-    Axios({
-      url: "https://randomuser.me/api",
-      method: "GET",
-      data: {
-        results: 10,
-        ...params
-      },
-      type: "json"
-    }).then(data => {
-      const pagination = { ...this.state.pagination };
-      // Read total count from server
-      // pagination.total = data.totalCount;
-      pagination.total = 200;
-      this.setState({
-        loading: false,
-        data: data.results,
-        pagination
-      });
+  setSearchQuery = e => {
+    e.preventDefault();
+    this.props.form.validateFields((err, values) => {
+      if (err) {
+        Message.warning(err);
+        return;
+      }
+      this.refs.tableList.fetch(values);
+      // this.setState({ searchQuery: values });
     });
   };
 
@@ -134,24 +104,17 @@ class TableList extends Component {
   /**
    * 重置表单
    */
-  resetFormFields() {}
-
-  /**
-   * 跳转至修改页
-   */
-  linkToModifyPage() {
-    this.props.history.push(
-      "/home/supplySystem/1/commodityManagement/classifyManagement/modify"
-    );
+  resetFormFields() {
+    this.props.form.resetFields();
   }
 
   render() {
-    // const { getFieldDecorator } = this.props.form;
+    const { getFieldDecorator } = this.props.form;
     return (
       <div>
         <div className="tx-form-container box-shadow">
           <Form
-            onSubmit={this.handleSubmit}
+            onSubmit={this.setSearchQuery}
             style={{
               width: "95%",
               margin: "auto"
@@ -160,19 +123,25 @@ class TableList extends Component {
             <Row>
               <Col span={8}>
                 <FormItem label="商品名称" {...formItemLayout}>
-                  <Input size="large" placeholder="请输入商品名称" />
+                  {getFieldDecorator("goodsName")(
+                    <Input size="large" placeholder="请输入商品名称" />
+                  )}
                 </FormItem>
               </Col>
 
               <Col span={8}>
                 <FormItem label="商品状态" {...formItemLayout}>
-                  <Select
-                    placeholder="请选择商品状态"
-                    defaultValue=""
-                    size="large"
-                  >
-                    {this.initGoodsStatusList(this.state.goodsStatusList)}
-                  </Select>
+                  {getFieldDecorator("goodsStatus", {
+                    initialValue: ""
+                  })(
+                    <Select
+                      placeholder="请选择商品状态"
+                      size="large"
+                      allowClear
+                    >
+                      {this.initGoodsStatusList(this.state.goodsStatusList)}
+                    </Select>
+                  )}
                 </FormItem>
               </Col>
 
@@ -193,7 +162,84 @@ class TableList extends Component {
             </Row>
           </Form>
         </div>
+        <TableList ref="tableList" history={this.props.history} />
+      </div>
+    );
+  }
+}
 
+const QueryForm = Form.create()(FormQuery);
+
+/**
+ * TableList
+ */
+class TableList extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      tableData: [],
+      pagination: {
+        pageSize: 10,
+        current: 1,
+        total: 0
+      },
+      loading: false
+    };
+  }
+
+  componentWillMount() {
+    this.fetch();
+  }
+
+  handleTableChange = (pagination, filters, sorter) => {
+    const pager = { ...this.state.pagination };
+    pager.current = pagination.current;
+    console.log(this.state.pagination);
+    console.log(pager);
+    this.setState({
+      pagination: pager
+    });
+    this.fetch({
+      pageIndex: pagination.current,
+      pageSize: pagination.pageSize
+    });
+  };
+
+  fetch = (params = {}) => {
+    let bodyParams = Object.assign({}, params);
+    this.setState({ loading: true });
+    Axios({
+      url: "/api/goods/goodsList",
+      method: "GET",
+      params: bodyParams
+    }).then(res => {
+      let resData = res.data.data;
+      let pagination = Object.assign(this.state.pagination, {
+        total: resData.total,
+        pageSize: resData.pageSize,
+        showTotal: () => `共${resData.total}条`,
+        current: resData.pageIndex
+      });
+      this.setState({
+        tableData: resData.dataList,
+        loading: false,
+        pagination: pagination
+      });
+    });
+  };
+
+  /**
+   * 跳转至修改页
+   */
+  linkToModifyPage() {
+    this.props.history.push(
+      "/home/supplySystem/1/commodityManagement/classifyManagement/modify"
+    );
+  }
+
+  render() {
+    return (
+      <div>
         <div className="tx-form-container box-shadow">
           <Button
             onClick={this.linkToModifyPage.bind(this)}
@@ -207,8 +253,8 @@ class TableList extends Component {
         <div className="tx-form-container box-shadow">
           <Table
             columns={columns}
-            rowKey={record => record.login.uuid}
-            dataSource={this.state.data}
+            dataSource={this.state.tableData}
+            rowKey={record => record.id}
             pagination={this.state.pagination}
             loading={this.state.loading}
             onChange={this.handleTableChange}
@@ -223,4 +269,4 @@ class TableList extends Component {
   }
 }
 
-export default withRouter(TableList);
+export default withRouter(QueryForm);

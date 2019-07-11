@@ -39,26 +39,45 @@ class Modify extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    this.setState({
-      isDisabled: true
-    });
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        let bodyParams = Object.assign({}, values);
-        Axios({
-          url: "/api/goods/addGoods",
-          method: "POST",
-          data: bodyParams
-        }).then(res => {
-          console.log(res);
-        });
-      } else {
-        this.setState({
-          isDisabled: false
+    this.setState(
+      {
+        isDisabled: true
+      },
+      () => {
+        this.props.form.validateFields((err, values) => {
+          if (!err) {
+            let bodyParams = Object.assign({}, values);
+            Axios({
+              url: "/api/goods/addGoods",
+              method: "POST",
+              data: bodyParams
+            }).then(res => {
+              let resData = res.data;
+              if (resData.apiStatus === 0 && resData.sysStatus === 0) {
+                Message.success(resData.info);
+                setTimeout(() => {
+                  this.goBack();
+                });
+              } else {
+                Message.error(resData.info);
+                this.setState({
+                  isDisabled: false
+                });
+              }
+            });
+          } else {
+            this.setState({
+              isDisabled: false
+            });
+          }
         });
       }
-    });
+    );
   };
+
+  goBack() {
+    this.props.history.goBack();
+  }
 
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -125,7 +144,9 @@ class Modify extends Component {
               )}
             </FormItem>
             <FormItem label=" " colon={false}>
-              <Button size="large">取 消</Button>
+              <Button size="large" onClick={this.goBack.bind(this)}>
+                取 消
+              </Button>
               <Button
                 size="large"
                 type="primary"

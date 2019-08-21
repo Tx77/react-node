@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon -e js --ignore react/ index.dev.js",
-    "build": "cross-env NODE_ENV=production webpack --config react/webpack.config.js",
+    "build": "cross-env NODE_ENV=development webpack --config react/webpack.config.js",
     "start": "node index.prod.js"
   },
   "repository": {

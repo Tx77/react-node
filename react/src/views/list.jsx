@@ -1,12 +1,6 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import { Provider } from "react-redux";
-import { createStore } from "redux";
-import changeColor from "reduxFactory/reducers/changeColor.js";
-import Header from "components/Header.jsx";
-import Content from "components/Content.jsx";
 import { Form, Row, Col, Input, Select, Button, Table, Icon } from "antd";
-import Highlighter from "react-highlight-words";
 import Axios from "axios";
 import "style/common.less";
 import PropTypes from "prop-types";
@@ -14,12 +8,12 @@ import PropTypes from "prop-types";
 const FormItem = Form.Item;
 const formItemLayout = {
   labelCol: {
-    xs: { span: 4 },
-    sm: { span: 4 }
+    xs: { span: 6 },
+    sm: { span: 6 }
   },
   wrapperCol: {
-    xs: { span: 20 },
-    sm: { span: 20 }
+    xs: { span: 18 },
+    sm: { span: 18 }
   }
 };
 const { Option } = Select;
@@ -56,8 +50,6 @@ const columns = [
   }
 ];
 
-const store = createStore(changeColor);
-
 class FormQuery extends Component {
   constructor() {
     super();
@@ -81,14 +73,14 @@ class FormQuery extends Component {
         return;
       }
       this.refs.tableList.loadTableData(values);
-      // this.setState({ searchQuery: values });
     });
   };
 
   /**
-   * @description: 初始化商品状态列表并返回子组件
-   * @param {arr}
-   * @return: array
+   * 初始化商品状态列表并返回子组件
+   * @param {*} arr
+   * @returns
+   * @memberof FormQuery
    */
   initGoodsStatusList(arr) {
     let goodsStatusList = [];
@@ -189,9 +181,6 @@ class TableList extends Component {
   }
 
   componentWillMount() {
-    const arr = [1, 2, 3];
-    arr[0] = 4;
-    console.log(arr);
     this.loadTableData();
   }
   /**

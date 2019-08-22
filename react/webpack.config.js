@@ -115,6 +115,10 @@ if (isProd) {
       filename: "style.css"
     })
   );
+} else {
+  Object.assign(webpackConfig, {
+    devtool: 'eval-source-map'
+  });
 }
 
 module.exports = webpackConfig;

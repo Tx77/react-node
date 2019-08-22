@@ -20,7 +20,7 @@ export default [
       {
         'id': 120,
         'resourcesUrl': '/home/supplySystem/1/commodityManagement/specManagement',
-        'resourcesName': '规格管理',
+        'resourcesName': '分类管理',
         'childResourcesEntityList': []
       }
     ]
